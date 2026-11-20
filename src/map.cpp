@@ -13,8 +13,9 @@ sf::Color minimap_bg_color(60, 60, 60);
 
 
 sf::Color obstacleAgeColor(int storedDiscoveryTime, float currentTimeSeconds) {
-    const long long discoveredAtSeconds =
-        -static_cast<long long>(storedDiscoveryTime) - 1;
+    const long long discoveredAtSeconds = std::max(
+        0LL,
+        static_cast<long long>(storedDiscoveryTime) - 1);
     const float ageSeconds = std::max(
         0.f,
         currentTimeSeconds - static_cast<float>(discoveredAtSeconds));
@@ -72,7 +73,7 @@ void Map::updatePassMaskAt(float robotRadius, cords cordsInput){
     int row = cordsInput.row;
     int col = cordsInput.col;
 
-    if (!isMaskSet(obstacleMask[row][col])){
+    if (isObstacle(obstacleMask[row][col])){
         for (int drow = -minSquares + 1; drow < minSquares; drow++){
             for (int dcol = -minSquares + 1 ; dcol < minSquares; dcol++){
                 if (cordsInMask(obstacleMask, cords{row+drow, col+dcol}))
@@ -91,7 +92,7 @@ void Map::updatePassMask(float robotRadius){
     for (int row = 0; row < obstacleMask.size(); row ++){
         for (int col = 0; col < obstacleMask[0].size(); col ++){
 
-            if (!isMaskSet(obstacleMask[row][col])){
+            if (isObstacle(obstacleMask[row][col])){
                 for (int drow = -minSquares + 1; drow < minSquares; drow++){
                     for (int dcol = -minSquares + 1 ; dcol < minSquares; dcol++){
                         if (cordsInMask(obstacleMask, cords{row+drow, col+dcol}))
@@ -109,12 +110,12 @@ void Map::setupObstacleMask(){
     for (unsigned int y = 0; y < mapSize.y; y += squareSide){
         obstacleMask.push_back({});
         for (unsigned int x = 0; x < mapSize.x; x += squareSide){
-            obstacleMask.back().push_back(1);
+            obstacleMask.back().push_back(0);
             for (auto obstacle : obstacles){
                 bool xInRect = obstacle.getPosition().x <= x && x < (obstacle.getPosition().x + obstacle.getWidth());
                 bool yInRect = obstacle.getPosition().y <= y && y < (obstacle.getPosition().y + obstacle.getHeight());
                 if (xInRect && yInRect) {
-                    obstacleMask.back().back() = 0;
+                    obstacleMask.back().back() = 1;
                     break;
                 }
             }
@@ -142,14 +143,16 @@ void Map::setMiniMap(sf::Vector2f topLeft, sf::Vector2f size){
 }
 
 void Map::setObstMaskAt(cords cords, int value){
-    if (0 <= cords.row && cords.row < obstacleMask.size() && 0 <= cords.col && cords.col < obstacleMask[0].size())
-        obstacleMask[cords.row][cords.col] = value;
-    else printf("setObstMaskAt(): wrong cords given\n");
+    if (0 <= cords.row && cords.row < obstacleMask.size() && 0 <= cords.col && cords.col < obstacleMask[0].size()) {
+        obstacleMask[cords.row][cords.col] = std::max(value, 0);
+    } else printf("setObstMaskAt(): wrong cords given\n");
 }
 
 void Map::markObstacleFound(cords cords){
-    if (cordsInMask(obstacleMask, cords) && isMaskSet(obstacleMask[cords.row][cords.col])) {
-        obstacleMask[cords.row][cords.col] = -(getElapsedSeconds() + 1);
+    if (cordsInMask(obstacleMask, cords)
+        && !isObstacle(obstacleMask[cords.row][cords.col])) {
+        obstacleMask[cords.row][cords.col] =
+            std::min(getElapsedSeconds(), std::numeric_limits<int>::max() - 1) + 1;
     }
     else if (!cordsInMask(obstacleMask, cords)) {
         printf("markObstacleFound(): wrong cords given\n");
@@ -170,7 +173,7 @@ void Map::drawObstaclesMiniMap(sf::RenderWindow& window){
 
     for (int row = 0; row < obstacleMask.size(); row++){
         for (int col = 0; col < obstacleMask[0].size(); col++){
-            if (!isMaskSet(obstacleMask[row][col])){
+            if (isObstacle(obstacleMask[row][col])){
                 sf::RectangleShape square({squareSideMini, squareSideMini});
                 square.setPosition({miniMapBG.getPosition().x + col * squareSideMini, miniMapBG.getPosition().y + row * squareSideMini});
                 square.setFillColor(obstacleAgeColor(obstacleMask[row][col], currentTimeSeconds));
@@ -186,7 +189,7 @@ void Map::drawPassMaskMiniMap(sf::RenderWindow& window){
 
     for (int row = 0; row < passMask.size(); row++){
         for (int col = 0; col < passMask[0].size(); col++){
-            if (!isMaskSet(passMask[row][col])){
+            if (passMask[row][col] == 0){
                 sf::RectangleShape square({squareSideMini, squareSideMini});
                 square.setPosition({miniMapBG.getPosition().x + col * squareSideMini, miniMapBG.getPosition().y + row * squareSideMini});
                 square.setFillColor(sf::Color(255, 0, 0, 80));
@@ -211,7 +214,7 @@ void Map::makeAvoidanceRects(){
     for (unsigned int i = 0; i < passMask.size(); i++){
         auto row = passMask[i];
         for (unsigned j = 0; j < row.size(); j++){
-            bool isSquareOk = isMaskSet(row[j]);
+            bool isSquareOk = row[j] == 1;
 
             if (!isSquareOk) {
                 sf::Vector2f squareTopLeft = {j * squareSide, i * squareSide};
@@ -288,14 +291,14 @@ const mask2& Map::getObstacleMask() const {
 
 bool Map::getObstMaskAt(cords cords) const{
     if (0 <= cords.row && cords.row < obstacleMask.size() && 0 <= cords.col && cords.col < obstacleMask[0].size())
-        return isMaskSet(obstacleMask[cords.row][cords.col]);
+        return isObstacle(obstacleMask[cords.row][cords.col]);
     printf("getObstMaskAt(): wrong cords given\n");
     return 0;
 }
 
 bool Map::getPassMaskAt(cords cords) const{
     if (cordsInMask(passMask, cords))
-        return isMaskSet(passMask[cords.row][cords.col]);
+        return passMask[cords.row][cords.col] == 1;
     printf("getPassMaskAt(): wrong cords given\n");
     return 0;
 }

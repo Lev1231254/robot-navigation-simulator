@@ -39,7 +39,7 @@ Node generateNextNode(const mask2& passMask, Node& parent, cords& nextNodeCords,
 
     bool successorInMatrix = isInMatrix(successor.pos, passMask[0].size(), passMask.size());
 
-    if (successorInMatrix && isMaskSet(passMask[successor.pos.row][successor.pos.col])){
+    if (successorInMatrix && passMask[successor.pos.row][successor.pos.col] == 1){
         successor.parentPos = parent.pos;
         float g = getDistance(cordsToVector2f(successor.pos), cordsToVector2f(parent.pos)) + parent.g;
         float h = getDistance(cordsToVector2f(successor.pos), cordsToVector2f(endCords));
@@ -64,7 +64,7 @@ Nodes generateSuccessors(const mask2& passMask, Node& parent, cords& destination
 
             bool successorInMatrix = isInMatrix(successor.pos, passMask[0].size(), passMask.size());
 
-            if (successorInMatrix && isMaskSet(passMask[successor.pos.row][successor.pos.col])){
+            if (successorInMatrix && passMask[successor.pos.row][successor.pos.col] == 1){
                 successor.parentPos = parent.pos;
                 float g = getDistance(cordsToVector2f(successor.pos), cordsToVector2f(parent.pos)) + parent.g;
                 float h = getDistance(cordsToVector2f(successor.pos), cordsToVector2f(destinationCords));
@@ -137,7 +137,7 @@ cords searchFree(const mask2& passMask, cords originCords, cords destination){
                 cords cords{originCords.row + drow, originCords.col + dcol};
 
                 // check if cords are free and if they are less than the nearest cords
-                if (cordsInMask(passMask, cords) && isMaskSet(passMask[cords.row][cords.col])) {
+                if (cordsInMask(passMask, cords) && passMask[cords.row][cords.col] == 1) {
                     if (getDistance(destination, cords) < shortestDistance) {
                         bestFreeCords = cords;
                         shortestDistance = getDistance(destination, cords);
@@ -166,7 +166,7 @@ struct PathStart {
 
 PathStart selectPathStart(const mask2& passMask, cords startCords, cords destination){
     // 
-    if (cordsInMask(passMask, startCords) && isMaskSet(passMask[startCords.row][startCords.col])) {
+    if (cordsInMask(passMask, startCords) && passMask[startCords.row][startCords.col] == 1) {
         return {startCords, true};
     }
 

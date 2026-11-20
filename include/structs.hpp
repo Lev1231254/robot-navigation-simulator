@@ -39,7 +39,7 @@ struct ray{
 
 typedef std::vector<std::vector<int>> mask2;
 
-inline bool isMaskSet(int value) {
+inline bool isObstacle(int value) {
     return value > 0;
 }
 

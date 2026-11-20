@@ -147,7 +147,7 @@ void App::handleMouseButtonPressed(){
         int rowMouse = int(selectedSquare.y / square_side);
         cords end = {rowMouse, colMouse};
 
-        //if (isMaskSet(robot.getInnerMap().getPassMask()[rowMouse][colMouse])){
+        //if (robot.getInnerMap().getPassMask()[rowMouse][colMouse] == 1){
             sf::Vector2f robotPos = robot.getBodyCircle().getPosition();
 
             cords start = posToCords(

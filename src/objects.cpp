@@ -311,7 +311,7 @@ void Robot::updateInnerMap(){
     //foundNewObst = false;
     for (auto sensor : sensors){
         cords endCords = sensor.getEndCords();
-        if (endCords == nullCords || innerMap.getObstMaskAt(endCords) == false) continue;
+        if (endCords == nullCords || innerMap.getObstMaskAt(endCords)) continue;
         innerMap.markObstacleFound(endCords);
         foundNewObst = true;
         innerMap.updatePassMaskAt(body.getRadius(), endCords);

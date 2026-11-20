@@ -75,7 +75,7 @@ sf::Vector2f RayTracer::getFirstHitPos(ray& ray, Map& map){
             && maskCol >= 0
             && static_cast<std::size_t>(maskCol) < occupancyMask[maskRow].size();
         if (!inMask && !outsideMaskIsFree) return {-1.f, -1.f};
-        if (inMask && !isMaskSet(occupancyMask[maskRow][maskCol])) {
+        if (inMask && isObstacle(occupancyMask[maskRow][maskCol])) {
             return currentPos;
         }
 
@@ -100,7 +100,7 @@ sf::Vector2f RayTracer::getFirstHitPos(ray& ray, Map& map){
 cords RayTracer::getHitCords(ray& ray, Map& map, sf::Vector2f hitPos){
     //find point a little bit further from the hit, to get to the inner of the square
     if (hitPos == sf::Vector2f{-1, -1}) return nullCords;
-    sf::Vector2f furtherPos = hitPos + sf::Vector2f{ray.direction.x * 0.1f, ray.direction.y * 0.1f};
+    sf::Vector2f furtherPos = hitPos + sf::Vector2f{ray.direction.x * 0.05f, ray.direction.y * 0.05f};
     return posToCords(getSquareInGrid(map.getSquareSide(), furtherPos), map.getSquareSide());
 }
 
@@ -149,7 +149,7 @@ sf::Vector2f RayTracer::getFirstHitFinite(ray& ray, Map& map, sf::Vector2f end){
             && maskCol >= 0
             && static_cast<std::size_t>(maskCol) < occupancyMask[maskRow].size();
         if (!inMask && !outsideMaskIsFree) return {-1.f, -1.f};
-        if (inMask && !isMaskSet(occupancyMask[maskRow][maskCol])) {
+        if (inMask && isObstacle(occupancyMask[maskRow][maskCol])) {
             return currentPos;
         }
 
