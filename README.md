@@ -28,77 +28,105 @@ and replan its route.
 - Initially unknown environment.
 - Perfect sensors with infinite range.
 - All cells initially assumed to be free.
+- Mapping is grid-based.
 
 
-## Algorithms and structures
-- Memory grids:
+## How it works
 
-  The whole screen is devided into a grid. Each cell is 16x16 pixels square. 
+<img width="707" height="451" alt="image" src="https://github.com/user-attachments/assets/8829f957-0fc2-4891-bf59-2d933f0cca1d" />
 
-  Obstacle grid:
-  
-    Each square can have values:
-      if 0 no obstacle
-      if > 0 time in seconds, when the obstacle was discovered (was made only to make cool color fading in inner map)
-  
-    Initially all cells are 0, which means that robot thinks, there are no obstacles.
-  
-    Each time the robot moves, it updates the inner map, if the new obstacle was discovered. It builds the inner map gradually.
-  
-    The obstacles are not moving in this version yet, which is why it's enough to only mark the obstacles to build the map.
-    Since all cells are initially assumed to be free, the sensor only needs to mark the cell where an obstacle is detected. All cells traversed by the ray before the obstacle are already considered free.
 
-  Pass grid:
+## Algorithms and Structures
 
-    In order to make robot avoid the walls we kinda inflate the obstacles by around the radius of the robot. That is represented through a pass grid.
-    (picture with obstacle, pass zone and all lengths)
-    
-    Pass grid has the same size as obstacle grid. 
-    
-    1 - passable
-      
-    0 - not passable
-
-    Each time we update the obstacle grid, we update the pass grid. We don't update the whole grid but rather update the cells around the newly discovered obstacle-cell.
-
-  
-- Pathfinding:
-  Main idea of the algorithm is to use A* to find the shortest path to the destination on the pass grid. A* is like dijkstra, but it first checks the cells, that are closer to the destination. When A* finds the path to the destination it stops.
-
-  If it doesn't find it (for example the destination is unreachable) it will find the closest free cell to the destination and go there. It gradually checks bigger and bigger squares around the destination. Finds the first square with free cells and picks the closest cell using heuristic distance. 
-  This method is up to change, because if the robot picks a free, but an unreachable cell, it will try to make a path to this new destination. But since it's unreachable it will try to find new destination again and it could be exaclty the first cell, that we already dropped. Thus creating infinite loop. It will be fixed in the future.
-
-  
-
-  If the robot is already too deep in the unpassable zone (maybe it discovered the obstacles too late) and it tries to make a new path, the robot will add the nearest to the goal free cell to the beginning of the path and traverse the path normally. So it doesn't affect the 
-
-  Robot automatically updates the path when 300ms passed since the last update and a new obstacle was discovered since the last update.
-
-  The robot updates the path, even if the discovered obstacle is not close to a path, because i didn't have the time to make the solution.
-
-- Sensors:
-  The robot has 3 ideal infinite distance sensors.
-
-  They are using ray-casting the find the nearest obstacle in line and return it's coordinates.
-
-  For ray-casting I used Amanatides-Woo voxel traversal method, because it is a very effective algrorithm for voxel grid for finding the first hit of the ray. This way we remove unnecessary geometrical calculations.
-
-  To avoid the sensor pointing directly along a grid boundary and not being able to decide the end square, we add a very small distance along the ray to the endpoint. Thus getting an endpoint nudged to the next cell along the ray.
 
 | Component | Implementation |
 |---|---|
 | Environment representation | Grid-based map |
 | Mapping | Incremental obstacle discovery |
-| Navigation | A* + a few changes |
+| Navigation | A* + custom start and destination selection |
 | Collision avoidance | Obstacle inflation |
 | Perception | Three raycasting sensors |
 | Ray traversal | Amanatides-Woo |
 | Dynamic adaptation | Periodic, event-triggered replanning |
 
 
-## Navigation loop
+### 1. Memory Grids
 
-<img width="707" height="451" alt="image" src="https://github.com/user-attachments/assets/8829f957-0fc2-4891-bf59-2d933f0cca1d" />
+The environment is represented by a grid covering the entire screen. Each cell corresponds to a 16 × 16 pixel square.
+
+**Obstacle Grid**
+
+The obstacle grid represents the robot's internal map of the environment. Each cell stores:
+
+- `0` – No obstacle detected.
+- `> 0` – Timestamp (in seconds) indicating when an obstacle was discovered.
+
+Initially, all cells are set to `0`, meaning the robot assumes the entire environment is obstacle-free. As the robot moves and its sensors discover obstacles, the internal map is gradually updated.
+
+Since obstacles are static in the current version, discovered obstacles only need to be added to the map, not removed.
+
+The sensors only need to mark the cells containing obstacles. All cells traversed by a sensor ray before reaching an obstacle are already considered free.
+
+**Passability Grid**
+
+To prevent the robot from getting too close to walls, obstacles are inflated by approximately the robot's radius. This creates a safety margin around each obstacle.
+
+The resulting passability grid has the same dimensions as the obstacle grid:
+
+- `1` – Passable cell.
+- `0` – Impassable cell.
+
+Whenever a new obstacle is discovered, the corresponding cell and its surrounding cells are marked as impassable.
+
+Instead of recalculating the entire grid, only the area surrounding the newly discovered obstacle is updated. This avoids unnecessary calculations.
+
+(Picture illustrating obstacle inflation and the resulting safety margin.)
+
+### 2. Pathfinding
+
+Navigation is based on the *A\* algorithm*, which searches for the shortest path through the passability grid.
+
+A\* combines the actual cost of reaching a cell with a heuristic estimate of its distance to the destination. Unlike Dijkstra's algorithm, this allows it to prioritize cells that appear more promising for reaching the goal.
+
+If the destination is unreachable, the algorithm searches for an alternative destination. It gradually examines larger squares around the requested destination until it finds passable cells, then selects the one closest to the original goal according to the heuristic distance.
+
+**Current limitation:** The alternative destination might itself be unreachable from the robot's position. In this case, the algorithm can repeatedly select the same unreachable cells, resulting in an infinite loop. This will be addressed in a future update.
+
+Another special case occurs when the robot discovers obstacles too late and finds itself inside an impassable area according to its updated passability grid. When calculating a new path, the algorithm adds the nearest passable cell to the goal to the beginning of the path, allowing the robot to leave the affected area and continue navigating.
+
+**Automatic replanning**
+
+The robot automatically recalculates its path when both of the following conditions are met:
+
+- At least 300 ms have passed since the previous path update.
+- At least one new obstacle has been discovered since the previous update.
+
+Currently, replanning occurs whenever a new obstacle is discovered, even if it does not affect the existing path. More selective replanning is planned for a future update.
+
+### 3. Sensors
+
+The robot is equipped with three ideal distance sensors with unlimited range.
+
+Each sensor uses raycasting to detect the nearest obstacle along its direction and returns the coordinates of the detected obstacle.
+
+Ray traversal is implemented using the *Amanatides-Woo voxel traversal algorithm*. It efficiently determines which grid cells a ray intersects and identifies the first obstacle encountered, avoiding unnecessary geometric calculations.
+
+To handle rays that run directly along grid boundaries, a small offset is added to the ray's endpoint in its direction of travel. This nudges the endpoint into the next cell along the ray and resolves ambiguity when determining the final cell.
+
+
+
+
+## Further improvements
+
+### Planned
+- **Smarter replanning:** Only recalculate the path when newly discovered obstacles affect the current route.
+- **Improved destination selection:** Prevent infinite loops when the requested destination is unreachable.
+- **Dynamic obstacles:** Support moving obstacles and update the internal map accordingly.
+
+### Potential extensions
+- **Sensor noise:** Introduce inaccuracies into distance measurements.
+- **Limited sensor range:** Simulate more realistic distance sensors.
+- **Robot localization:** Introduce uncertainty in the robot's estimated position.
 
 ## Project Structure
 
