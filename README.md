@@ -10,6 +10,7 @@ obstacles, update its internal map, and adjust its planned route.
 - `Red zone - inflated obstacles. Robot tries to avoid it.`
 
 
+<br>
 
 ## Overview
 
@@ -25,7 +26,7 @@ and replan its route.
 
 - **C++17**
 - **SFML 3** for graphics and window handling
-- **CMake 3.22 or newer**
+- **CMake 3.28 or newer**
 
 
 ## Environment assumptions
@@ -35,11 +36,13 @@ and replan its route.
 - All cells initially assumed to be free.
 - Mapping is grid-based.
 
+<br>
 
 ## How it works
 
 <img width="707" height="451" alt="image" src="https://github.com/user-attachments/assets/8829f957-0fc2-4891-bf59-2d933f0cca1d" />
 
+<br>
 
 ## Algorithms and Structures
 
@@ -126,7 +129,7 @@ Ray traversal is implemented using the *Amanatides-Woo voxel traversal algorithm
 To handle rays that run directly along grid boundaries, a small offset is added to the ray's endpoint in its direction of travel. This nudges the endpoint into the next cell along the ray and resolves ambiguity when determining the final cell.
 
 
-
+<br>
 
 ## Further improvements
 
@@ -140,6 +143,8 @@ To handle rays that run directly along grid boundaries, a small offset is added 
 - **Limited sensor range:** Simulate more realistic distance sensors.
 - **Robot localization:** Introduce uncertainty in the robot's estimated position.
 
+<br>
+
 ## Project Structure
 
 ```text
@@ -151,6 +156,8 @@ RobotSimulator/
 ├── src/              # C++ implementation files
 └── CMakeLists.txt    # Build configuration
 ```
+
+<br>
 
 ## Download and Run
 
@@ -172,8 +179,8 @@ Make sure you have the following installed:
 - A C++17-compatible compiler
 - [CMake 3.22 or newer](https://cmake.org/download/)
 - Git (required if you cloned the repository)
+- [Linux dependencies](#linux-dependencies-ubuntu--debian)
 
-SFML is downloaded automatically during the CMake configuration step. An internet connection is required for the initial build.
 
 ### 3. Build the project
 
@@ -211,5 +218,29 @@ cd build
 ```
 
 The executable's location depends on the CMake generator you use.
+
+## Linux dependencies (Ubuntu / Debian)
+
+Before building the project, install the required development packages:
+
+```bash
+sudo apt update
+
+sudo apt install \
+    build-essential \
+    git \
+    cmake \
+    libxrandr-dev \
+    libxcursor-dev \
+    libxi-dev \
+    libudev-dev \
+    libfreetype-dev \
+    libflac-dev \
+    libvorbis-dev \
+    libgl1-mesa-dev \
+    libegl1-mesa-dev \
+    libmbedtls-dev \
+    libssh2-1-dev
+```
 #
 Thank you for reading!
