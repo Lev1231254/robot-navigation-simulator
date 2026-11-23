@@ -171,7 +171,17 @@ RobotSimulator/
 
 ## Download and Run
 
-### 1. Download the project
+### 1. Install the requirements
+
+Make sure you have the following installed:
+
+- A C++17-compatible compiler
+- [CMake 3.28 or newer](https://cmake.org/download/)
+- Git (required if you cloned the repository)
+- [Linux dependencies](#linux-dependencies-ubuntu--debian)
+
+
+### 2. Download the project
 
 You can either clone the repository using Git:
 
@@ -181,15 +191,6 @@ cd robot-navigation-simulator
 ```
 
 Or download the source code as a ZIP file from the GitHub repository and extract it.
-
-### 2. Install the requirements
-
-Make sure you have the following installed:
-
-- A C++17-compatible compiler
-- [CMake 3.28 or newer](https://cmake.org/download/)
-- Git (required if you cloned the repository)
-- [Linux dependencies](#linux-dependencies-ubuntu--debian)
 
 
 ### 3. Build the project
