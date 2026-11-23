@@ -149,7 +149,7 @@ sf::Vector2f RayTracer::getFirstHitFinite(ray& ray, Map& map, sf::Vector2f end){
             && maskCol >= 0
             && static_cast<std::size_t>(maskCol) < occupancyMask[maskRow].size();
         if (!inMask && !outsideMaskIsFree) return {-1.f, -1.f};
-        if (inMask && isObstacle(occupancyMask[maskRow][maskCol])) {
+        if (inMask && occupancyMask[maskRow][maskCol] == 0) {
             return currentPos;
         }
 

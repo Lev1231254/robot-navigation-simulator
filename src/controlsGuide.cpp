@@ -17,7 +17,7 @@ ControlsGuide::ControlsGuide()
           "LSHIFT  -  switch modes\n"
           "ESC  -  exit program\n\n"
 
-          "R  -  show / hide red zone\n"
+          "R  -  show / hide obstacle inflation\n"
           "P  -  show / hide path drawing\n"
           "M  -  show / hide map",
           24),

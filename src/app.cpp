@@ -219,6 +219,7 @@ void App::drawAll(){
     }
 
     if (controlsWindowOn) controlsGuide.draw(window);
+
 }
 
 void App::run(){

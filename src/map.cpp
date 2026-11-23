@@ -15,7 +15,7 @@ sf::Color minimap_bg_color(60, 60, 60);
 sf::Color obstacleAgeColor(int storedDiscoveryTime, float currentTimeSeconds) {
     const long long discoveredAtSeconds = std::max(
         0LL,
-        static_cast<long long>(storedDiscoveryTime) - 1);
+        static_cast<long long>(storedDiscoveryTime) + 1);
     const float ageSeconds = std::max(
         0.f,
         currentTimeSeconds - static_cast<float>(discoveredAtSeconds));
