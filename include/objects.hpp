@@ -51,7 +51,7 @@ class Path {
     int traversedNodes = 0;
     Map& map;
     RayTracer tracer;
-    int lineHeight = 6;
+    float lineHeight = 6.f;
     sf::Color color = sf::Color(44, 47, 214);
 
     public:
@@ -59,7 +59,7 @@ class Path {
         
         const Nodes& getNodes() const;
         const Map& getMap() const;
-        const int getTraversedNodesCount() const;
+        int getTraversedNodesCount() const;
         sf::Vector2f getEndPos() const;
         cords getEndCords() const;
 

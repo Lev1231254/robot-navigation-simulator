@@ -455,7 +455,7 @@ const Nodes& Path::getNodes() const{
     return nodes;
 }
 
-const int Path::getTraversedNodesCount() const {
+int Path::getTraversedNodesCount() const {
     return traversedNodes;
 }
 

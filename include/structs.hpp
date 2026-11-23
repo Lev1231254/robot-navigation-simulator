@@ -2,7 +2,14 @@
 #define STRUCTS_HPP
 
 #include <SFML/Graphics.hpp>
+#include <cstddef>
+#include <cstdint>
 #include <vector>
+
+typedef std::size_t Index;
+typedef std::int32_t GridCoordinate;
+typedef float Scalar;
+typedef unsigned int PixelCoordinate;
 
 struct cords{
     int row;
