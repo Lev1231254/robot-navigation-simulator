@@ -1,4 +1,4 @@
-# RobotSimulator
+# robot-navigation-simulator
 
 A C++17 simulator for robot navigation in initially unknown 2D
 environments. Select a target cell and watch the robot discover
@@ -13,7 +13,7 @@ obstacles, update its internal map, and adjust its planned route.
 
 ## Overview
 
-RobotSimulator demonstrates grid-based mapping and path planning
+robot-navigation-simulator demonstrates grid-based mapping and path planning
 in an interactive 2D environment.
 
 The robot begins without knowledge of the surrounding obstacles.
@@ -100,6 +100,8 @@ A\* combines the actual cost of reaching a cell with a heuristic estimate of its
 
 If the destination is unreachable, the algorithm searches for an alternative destination. It gradually examines larger squares around the requested destination until it finds passable cells, then selects the one closest to the original goal according to the heuristic distance.
 
+![](https://github.com/Lev1231254/RobotSimulator/blob/main/assets/gifs/changed%20destination.gif)
+
 **Current limitation:** The alternative destination might itself be unreachable from the robot's position. In this case, the algorithm can repeatedly select the same unreachable cells, resulting in an infinite loop. This will be addressed in a future update.
 
 Another special case occurs when the robot discovers obstacles too late and finds itself inside an impassable area according to its updated passability grid. When calculating a new path, the algorithm adds the nearest passable cell to the goal to the beginning of the path, allowing the robot to leave the affected area and continue navigating.
@@ -150,41 +152,60 @@ RobotSimulator/
 └── CMakeLists.txt    # Build configuration
 ```
 
+## Download and Run
 
+### 1. Download the project
 
-## Build
+You can either clone the repository using Git:
 
-### Requirements
+```sh
+git clone https://github.com/Lev1231254/robot-navigation-simulator.git
+cd robot-navigation-simulator
+```
 
-- A compiler supporting C++17
-- CMake 3.22 or newer
-- Git and internet access for the initial SFML download
-- Platform-specific dependencies required to build SFML
+Or download the source code as a ZIP file from the GitHub repository and extract it.
 
-SFML is fetched from its upstream repository during CMake
-configuration.
+### 2. Install the requirements
 
-### Configure and compile
+Make sure you have the following installed:
+
+- A C++17-compatible compiler
+- [CMake 3.22 or newer](https://cmake.org/download/)
+- Git (required if you cloned the repository)
+
+SFML is downloaded automatically during the CMake configuration step. An internet connection is required for the initial build.
+
+### 3. Build the project
+
+Open a terminal in the project directory and run:
 
 ```sh
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build --config Release --parallel
 ```
 
-The executable is named `robot_simulator`. Its location depends
-on the selected CMake generator and platform.
+### 4. Run the simulator
 
-### Optional profiling build
-
-GNU gprof instrumentation can be enabled when building with GCC:
+**Linux / macOS**
 
 ```sh
-cmake -S . -B build-profile \
-  -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-  -DROBOT_SIMULATOR_ENABLE_PROFILING=ON
-
-cmake --build build-profile --parallel
+./build/robot_simulator
 ```
 
-Collecting and inspecting profiling results also requires a
-compatible platform and the `gprof` tool.
+**Windows (PowerShell)**
+
+If you are using Visual Studio as your CMake generator:
+
+```powershell
+.\build\Release\robot_simulator.exe
+```
+
+If you are using MinGW or Ninja:
+
+```powershell
+.\build\robot_simulator.exe
+```
+
+The executable's location depends on the CMake generator you use.
+
+Thank you for reading!
