@@ -75,4 +75,9 @@ std::vector<Obstacle> labyrinthMap = {
 
 std::vector<Obstacle> emptyMap = {};
 
+std::vector<Obstacle> mapForImages = {
+    labyrinthWestSteppingStoneA
+};
+
+
 #endif
