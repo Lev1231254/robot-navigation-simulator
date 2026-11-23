@@ -10,6 +10,7 @@ obstacles, update its internal map, and adjust its planned route.
 - `Red zone - inflated obstacles. Robot tries to avoid it.`
 
 
+<br>
 
 ## Overview
 
@@ -21,11 +22,21 @@ As it moves toward a selected destination, simulated distance
 measurements reveal the environment, allowing it to update its map
 and replan its route.
 
+**Table of contents:**
+- [How It Works](#how-it-works)
+- [Algorithms and Structures](#algorithms-and-structures)
+  - [Memory Grids](#1-memory-grids)
+  - [Pathfinding](#2-pathfinding)
+  - [Sensors](#3-sensors)
+- [Further Improvements](#further-improvements)
+- [Download and Run](#download-and-run)
+- [Linux Dependencies](#linux-dependencies-ubuntu--debian)
+
 ## Technologies
 
 - **C++17**
 - **SFML 3** for graphics and window handling
-- **CMake 3.22 or newer**
+- **CMake 3.28 or newer**
 
 
 ## Environment assumptions
@@ -35,11 +46,13 @@ and replan its route.
 - All cells initially assumed to be free.
 - Mapping is grid-based.
 
+<br>
 
 ## How it works
 
 <img width="707" height="451" alt="image" src="https://github.com/user-attachments/assets/8829f957-0fc2-4891-bf59-2d933f0cca1d" />
 
+<br>
 
 ## Algorithms and Structures
 
@@ -126,7 +139,7 @@ Ray traversal is implemented using the *Amanatides-Woo voxel traversal algorithm
 To handle rays that run directly along grid boundaries, a small offset is added to the ray's endpoint in its direction of travel. This nudges the endpoint into the next cell along the ray and resolves ambiguity when determining the final cell.
 
 
-
+<br>
 
 ## Further improvements
 
@@ -140,6 +153,8 @@ To handle rays that run directly along grid boundaries, a small offset is added 
 - **Limited sensor range:** Simulate more realistic distance sensors.
 - **Robot localization:** Introduce uncertainty in the robot's estimated position.
 
+<br>
+
 ## Project Structure
 
 ```text
@@ -152,9 +167,21 @@ RobotSimulator/
 └── CMakeLists.txt    # Build configuration
 ```
 
+<br>
+
 ## Download and Run
 
-### 1. Download the project
+### 1. Install the requirements
+
+Make sure you have the following installed:
+
+- A C++17-compatible compiler
+- [CMake 3.28 or newer](https://cmake.org/download/)
+- Git (required if you cloned the repository)
+- [Linux dependencies](#linux-dependencies-ubuntu--debian)
+
+
+### 2. Download the project
 
 You can either clone the repository using Git:
 
@@ -165,15 +192,6 @@ cd robot-navigation-simulator
 
 Or download the source code as a ZIP file from the GitHub repository and extract it.
 
-### 2. Install the requirements
-
-Make sure you have the following installed:
-
-- A C++17-compatible compiler
-- [CMake 3.22 or newer](https://cmake.org/download/)
-- Git (required if you cloned the repository)
-
-SFML is downloaded automatically during the CMake configuration step. An internet connection is required for the initial build.
 
 ### 3. Build the project
 
@@ -186,26 +204,54 @@ cmake --build build --config Release --parallel
 
 ### 4. Run the simulator
 
+First, navigate to the build directory:
+
+```sh
+cd build
+```
+
 **Linux / macOS**
 
 ```sh
-./build/robot_simulator
+./robot_simulator
 ```
 
-**Windows (PowerShell)**
-
-If you are using Visual Studio as your CMake generator:
+**Windows (Visual Studio)**
 
 ```powershell
-.\build\Release\robot_simulator.exe
+.\Release\robot_simulator.exe
 ```
 
-If you are using MinGW or Ninja:
+**Windows (MinGW or Ninja)**
 
 ```powershell
-.\build\robot_simulator.exe
+.\robot_simulator.exe
 ```
 
 The executable's location depends on the CMake generator you use.
+
+## Linux dependencies (Ubuntu / Debian)
+
+Before building the project, install the required development packages:
+
+```bash
+sudo apt update
+
+sudo apt install \
+    build-essential \
+    git \
+    cmake \
+    libxrandr-dev \
+    libxcursor-dev \
+    libxi-dev \
+    libudev-dev \
+    libfreetype-dev \
+    libflac-dev \
+    libvorbis-dev \
+    libgl1-mesa-dev \
+    libegl1-mesa-dev \
+    libmbedtls-dev \
+    libssh2-1-dev
+```
 #
 Thank you for reading!
