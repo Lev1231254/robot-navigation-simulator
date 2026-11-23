@@ -59,7 +59,7 @@ class Path {
         
         const Nodes& getNodes() const;
         const Map& getMap() const;
-        const int getTraversedNodes() const;
+        const int getTraversedNodesCount() const;
         sf::Vector2f getEndPos() const;
         cords getEndCords() const;
 

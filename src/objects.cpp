@@ -258,7 +258,7 @@ void Robot::traversePath(Path& path){
     int squareSide = path.getMap().getSquareSide();
     if (path.getNodes().size() == 0) return;    
     else if (isAtNode(path.getNodes().back(), squareSide)) {
-        chatLog.addMessage("Node " + std::to_string(path.getTraversedNodes()) + " reached");
+        chatLog.addMessage("Node " + std::to_string(path.getTraversedNodesCount()) + " reached");
         path.traversedNodesInc();
         path.deleteNode(path.getNodes().size()-1);
     }
@@ -266,7 +266,7 @@ void Robot::traversePath(Path& path){
 
     // if we traversed the last node show the total amount of traversed nodes
     if (path.getNodes().size() == 0) {
-        chatLog.addMessage("Traversed total of " + std::to_string(path.getTraversedNodes()) + " nodes");
+        chatLog.addMessage("Traversed total of " + std::to_string(path.getTraversedNodesCount()) + " nodes");
         path.setTraversedNodes(0);
     }
 }
@@ -455,7 +455,7 @@ const Nodes& Path::getNodes() const{
     return nodes;
 }
 
-const int Path::getTraversedNodes() const {
+const int Path::getTraversedNodesCount() const {
     return traversedNodes;
 }
 
