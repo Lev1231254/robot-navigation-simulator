@@ -6,6 +6,11 @@ obstacles, update its internal map, and adjust its planned route.
 
 <!-- Add a screenshot or demo GIF here. -->
 
+
+
+
+
+
 ## Overview
 
 RobotSimulator demonstrates grid-based mapping and path planning
