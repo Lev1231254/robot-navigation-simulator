@@ -22,6 +22,16 @@ As it moves toward a selected destination, simulated distance
 measurements reveal the environment, allowing it to update its map
 and replan its route.
 
+**Table of contents:**
+- [How It Works](#how-it-works)
+- [Algorithms and Structures](#algorithms-and-structures)
+  - [Memory Grids](#1-memory-grids)
+  - [Pathfinding](#2-pathfinding)
+  - [Sensors](#3-sensors)
+- [Further Improvements](#further-improvements)
+- [Download and Run](#download-and-run)
+- [Linux Dependencies](#linux-dependencies-ubuntu--debian)
+
 ## Technologies
 
 - **C++17**
