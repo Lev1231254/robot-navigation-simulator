@@ -186,24 +186,28 @@ cmake --build build --config Release --parallel
 
 ### 4. Run the simulator
 
+First, navigate to the build directory:
+
+```sh
+cd build
+```
+
 **Linux / macOS**
 
 ```sh
-./build/robot_simulator
+./robot_simulator
 ```
 
-**Windows (PowerShell)**
-
-If you are using Visual Studio as your CMake generator:
+**Windows (Visual Studio)**
 
 ```powershell
-.\build\Release\robot_simulator.exe
+.\Release\robot_simulator.exe
 ```
 
-If you are using MinGW or Ninja:
+**Windows (MinGW or Ninja)**
 
 ```powershell
-.\build\robot_simulator.exe
+.\robot_simulator.exe
 ```
 
 The executable's location depends on the CMake generator you use.
