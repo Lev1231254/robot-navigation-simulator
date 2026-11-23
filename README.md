@@ -177,7 +177,7 @@ Or download the source code as a ZIP file from the GitHub repository and extract
 Make sure you have the following installed:
 
 - A C++17-compatible compiler
-- [CMake 3.22 or newer](https://cmake.org/download/)
+- [CMake 3.28 or newer](https://cmake.org/download/)
 - Git (required if you cloned the repository)
 - [Linux dependencies](#linux-dependencies-ubuntu--debian)
 
