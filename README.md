@@ -6,7 +6,7 @@ obstacles, update its internal map, and adjust its planned route.
 
 <!-- Add a screenshot or demo GIF here. -->
 
-
+![](https://github.com/Lev1231254/RobotSimulator/blob/main/assets/gifs/showcase.gif)
 
 
 
