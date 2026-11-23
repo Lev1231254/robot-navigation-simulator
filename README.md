@@ -4,10 +4,10 @@ A C++17 simulator for robot navigation in initially unknown 2D
 environments. Select a target cell and watch the robot discover
 obstacles, update its internal map, and adjust its planned route.
 
-<!-- Add a screenshot or demo GIF here. -->
 
 ![](https://github.com/Lev1231254/RobotSimulator/blob/main/assets/gifs/showcase.gif)
-
+- `Blue line - current path to the destination. Robot goes along the path.`
+- `Red zone - inflated obstacles. Robot tries to avoid it.`
 
 
 
@@ -63,8 +63,12 @@ The environment is represented by a grid covering the entire screen. Each cell c
 
 The obstacle grid represents the robot's internal map of the environment. Each cell stores:
 
+
 - `0` – No obstacle detected.
 - `> 0` – Timestamp (in seconds) indicating when an obstacle was discovered.
+<img width="771" height="462" alt="image" src="https://github.com/user-attachments/assets/8b1f29ca-6780-414a-8b6e-19a69fb6acb6" />
+
+
 
 Initially, all cells are set to `0`, meaning the robot assumes the entire environment is obstacle-free. As the robot moves and its sensors discover obstacles, the internal map is gradually updated.
 
@@ -81,11 +85,12 @@ The resulting passability grid has the same dimensions as the obstacle grid:
 - `1` – Passable cell.
 - `0` – Impassable cell.
 
+<img width="805" height="462" alt="image" src="https://github.com/user-attachments/assets/5a20316f-00fb-44ff-a0c4-f0af7b8f5607" />
+
+
 Whenever a new obstacle is discovered, the corresponding cell and its surrounding cells are marked as impassable.
 
 Instead of recalculating the entire grid, only the area surrounding the newly discovered obstacle is updated. This avoids unnecessary calculations.
-
-(Picture illustrating obstacle inflation and the resulting safety margin.)
 
 ### 2. Pathfinding
 
@@ -139,6 +144,7 @@ To handle rays that run directly along grid boundaries, a small offset is added 
 RobotSimulator/
 ├── assets/
 │   └── fonts/        # Font assets
+│   └── gifs/         # Gifs
 ├── include/          # Header files
 ├── src/              # C++ implementation files
 └── CMakeLists.txt    # Build configuration
