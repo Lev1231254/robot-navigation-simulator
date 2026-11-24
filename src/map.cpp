@@ -240,7 +240,7 @@ void Map::drawCursor(sf::RenderWindow& window, const sf::Image& windowCopy, sf::
     int yMax = window.getSize().y;
 
     if (x < 0 || x >= xMax || y < 0 || y >= yMax) return;
-    sf::Color color = windowCopy.getPixel({u_int(x),u_int(y)});
+    sf::Color color = windowCopy.getPixel({static_cast<unsigned int>(x), static_cast<unsigned int>(y)});
 
     color = color + colorToAdd;
     color = color - sf::Color(50, 50, 50, 0);

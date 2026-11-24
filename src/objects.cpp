@@ -497,7 +497,7 @@ void Path::drawLine(sf::RenderWindow& window, sf::Vector2f start, sf::Vector2f e
 
     sf::RectangleShape line(
         {
-            sqrt(pow(xDistance, 2) + pow(yDistance, 2)), 
+            float(sqrt(pow(xDistance, 2) + pow(yDistance, 2))), 
             lineHeight
         }
     );

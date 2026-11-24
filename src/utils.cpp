@@ -73,7 +73,10 @@ cords posToCords(sf::Vector2f pos, int squareSide){
 }
 
 sf::Vector2f cordsToPos(cords cords, int squareSide){
-    return {cords.col * squareSide, cords.row * squareSide};
+    return {
+        static_cast<float>(cords.col) * squareSide,
+        static_cast<float>(cords.row) * squareSide
+    };
 }
 
 
@@ -165,7 +168,7 @@ void normalizeAngleDeg(float& angle){
 }
 
 sf::Vector2u vec_f_to_u(sf::Vector2f vec){
-    return {u_int(vec.x), u_int(vec.y)};
+    return {static_cast<unsigned int>(vec.x), static_cast<unsigned int>(vec.y)};
 }
 
 sf::Vector2f vec_u_to_f(sf::Vector2u vec){
